@@ -6,7 +6,7 @@
 /*   By: rleskine <rleskine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 14:35:43 by rleskine          #+#    #+#             */
-/*   Updated: 2023/05/29 16:51:18 by rleskine         ###   ########.fr       */
+/*   Updated: 2023/05/29 16:53:41 by rleskine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,8 @@ t_stack	*minops2(t_snode *sl, int valid)
 	int	i;
 	int	min;
 	int	best;
+
+	
 }
 
 int	check_op(t_stack *s, int op)
