@@ -1,0 +1,21 @@
+t_node	*swap(t_node *frst, t_node *next)
+{
+	if (frst != NULL && next != NULL)
+	{
+		frst->next = next->next;
+		next->next = frst;
+	}
+	return (next);
+}
+
+t_stack	*push(t_stack *s, char ab)
+{
+	if (ab == 'a' && s->b != NULL)
+	{
+		s->i = s->b;
+		s->b = s->b->next;
+		s->i->next = s->a;
+		s->a = s->i;
+	}
+	return (s);
+}
