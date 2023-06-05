@@ -1,0 +1,1 @@
+echo "\033[2K [$(NAME)]: Compilation of $< \033[A"

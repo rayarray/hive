@@ -1,0 +1,51 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: rleskine <rleskine@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2023/03/15 16:29:22 by rleskine          #+#    #+#              #
+#    Updated: 2023/06/02 19:46:25 by rleskine         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+NAME		=	push_swap test_swap
+SRC			=	read_args.c list_oprs.c list_oprs2.c stack_ops.c stack_ops2.c \
+				sort_utils.c sort_brute.c sort_brute2.c sort_basic.c print_utils.c \
+				sort_radix.c
+OBJ			=	$(SRC:.c=.o)
+LIBS		=	./libft/libft.a 
+LIBDIR		=	$(basename $(notdir $(LIBS)))
+INCLUDE		=	$(addprefix -I, $(LIBDIR)) $(addprefix -L, $(LIBDIR))
+LIBFLAGS	=	-lft -lm
+CFLAGS		=	-Wall -Wextra -Werror -g
+# -fsanitize=address
+# remove fsanitize to make leaks work
+NPROCS 		=	$(shell sysctl hw.ncpu | grep -o '[0-9]\+')
+#MAKEFLAGS 	+= -j$(NPROCS)
+
+CC =	cc
+
+all: $(LIBS) $(OBJ) $(NAME)
+
+$(NAME): %: %.c
+	$(CC) $(CFLAGS) $(GFX) $(INCLUDE) $(LIBFLAGS) -o $@ $< $(OBJ)
+
+$(OBJ): %.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(LIBS): %:
+	$(MAKE) -j$(NPROCS) -C $(basename $(notdir $@))
+
+clean:
+	$(foreach lib, $(LIBDIR), $(MAKE) -C $(lib) clean)
+	rm -rf $(OBJ)
+
+fclean: clean
+	$(foreach lib, $(LIBDIR), $(MAKE) -C $(lib) fclean)
+	/bin/rm -f $(NAME)
+
+re: fclean all
+
+.SILENT:

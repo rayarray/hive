@@ -1,0 +1,206 @@
+t_node	*swap(t_node *frst, t_node *next)
+{
+	if (frst != NULL && next != NULL)
+	{
+		frst->next = next->next;
+		next->next = frst;
+	}
+	return (next);
+}
+
+t_stack	*push(t_stack *s, char ab)
+{
+	if (ab == 'a' && s->b != NULL)
+	{
+		s->i = s->b;
+		s->b = s->b->next;
+		s->i->next = s->a;
+		s->a = s->i;
+	}
+	return (s);
+}
+
+t_stack	*minops(t_stack *s[11])
+{
+	int	i;
+	int	min;
+	int	best;
+
+	i = 0;
+	min = -1;
+	best = -1;
+	while (min == -1 && i < 11)
+	{
+		if (s[i] && s[i]->a && is_sorted2(s[i]->a) && !s[i]->b && s[i]->ops != NULL)
+		{
+			min = get_listsize(s[i]->ops);
+			best = i;
+		}
+		i++;
+	}
+	while (i < 11)
+	{
+		if (s[i] && s[i]->a && is_sorted2(s[i]->a) && !s[i]->b && s[i]->ops != NULL && min > get_listsize(s[i]->ops))
+			min = get_listsize(s[i]->ops);
+			best = i;
+		i++;
+	}
+	i = 0;
+	while (i < 11)
+	{
+		if (i != best && s[i] != NULL)
+			free(s[i]);
+		i++;
+	}
+	if (min != -1)
+		return (s[best]);
+	else
+		return (NULL);
+}
+
+t_stack	*bruteforce(t_stack *s, int maxops, int i)
+{
+	t_stack	*stacks[11];
+
+	i = 0;
+	if (is_sorted2(s->a) || get_listsize(s->ops) >= maxops)
+		return (s);
+	stacks[0] = copy_stack(s);
+	stacks[0]->ops = add_to_end(0, stacks[0]->ops);
+	swap(stacks[0]);
+	stacks[0] = bruteforce(stacks[0], maxops, 0);
+	stacks[1] = copy_stack(s);
+	stacks[1]->ops = add_to_end(1, stacks[1]->ops);
+	b(stacks[1], &swap);
+	stacks[1] = bruteforce(stacks[1], maxops, 0);
+	stacks[2] = copy_stack(s);
+	stacks[2]->ops = add_to_end(2, stacks[2]->ops);
+	r(stacks[2], &swap);
+	stacks[2] = bruteforce(stacks[2], maxops, 0);
+	stacks[3] = copy_stack(s);
+	stacks[3]->ops = add_to_end(3, stacks[3]->ops);
+	push(stacks[3]);
+	stacks[3] = bruteforce(stacks[3], maxops, 0);
+	stacks[4] = copy_stack(s);
+	stacks[4]->ops = add_to_end(4, stacks[4]->ops);
+	b(stacks[4], &push);
+	stacks[4] = bruteforce(stacks[4], maxops, 0);
+	stacks[5] = copy_stack(s);
+	stacks[5]->ops = add_to_end(5, stacks[5]->ops);
+	rot(stacks[5]);
+	stacks[5] = bruteforce(stacks[5], maxops, 0);
+	stacks[6] = copy_stack(s);
+	stacks[6]->ops = add_to_end(6, stacks[6]->ops);
+	b(stacks[6], &rot);
+	stacks[6] = bruteforce(stacks[6], maxops, 0);
+	stacks[7] = copy_stack(s);
+	stacks[7]->ops = add_to_end(7, stacks[7]->ops);
+	r(stacks[7], &rot);
+	stacks[7] = bruteforce(stacks[7], maxops, 0);
+	stacks[8] = copy_stack(s);
+	stacks[8]->ops = add_to_end(8, stacks[8]->ops);
+	rrot(stacks[8]);
+	stacks[8] = bruteforce(stacks[8], maxops, 0);
+	stacks[9] = copy_stack(s);
+	stacks[9]->ops = add_to_end(9, stacks[9]->ops);
+	b(stacks[9], &rrot);
+	stacks[9] = bruteforce(stacks[9], maxops, 0);
+	stacks[10] = copy_stack(s);
+	stacks[10]->ops = add_to_end(10, stacks[10]->ops);
+	r(stacks[10], &rrot);
+	stacks[10] = bruteforce(stacks[10], maxops, 0);
+	return (minops(stacks));
+}
+
+from read_args
+if (**(ag + i) && **(ag + i) != ' '
+				&& !ft_isdigit(**(ag + i)) && destroy_list(lst[1]))
+				return (NULL);
+
+				t_snode	*getlast(t_snode *s)
+{
+	while (s && s->next)
+		s = s->next;
+	return (s);
+}
+
+bruteforce.c:
+t_snode	*add_stack(t_snode *lst, t_stack *s)
+{
+	if (!lst)
+	{
+		lst = (t_snode *)malloc(sizeof(t_snode));
+		if (lst == NULL)
+			return (NULL);
+		lst->next = NULL;
+		lst->s = copy_stack(s);
+		return (lst);
+	}
+	while (lst && lst->next)
+		lst = lst->next;
+	lst->next = (t_snode *)malloc(sizeof(t_snode));
+	if (lst->next == NULL)
+		return (NULL);
+	lst = lst->next;
+	lst->next = NULL;
+	lst->s = copy_stack(s);
+	return (lst);
+}
+
+t_stack	*minops2(t_snode *sl, t_snode *sl2, int valid)
+{
+	t_snode	*best;
+	int		min;
+
+	min = -1;
+	if (valid == 0)
+		return (NULL);
+	while (sl)
+	{
+		if (sl->s->b == NULL && is_sorted(sl->s->a))
+		{
+			if (min == -1 || get_listsize(sl->s->ops) < min)
+				best = sl;
+			if (min == -1)
+				min = get_listsize(sl->s->ops);
+			else if (get_listsize(sl->s->ops) < min)
+				min = get_listsize(sl->s->ops);
+		}
+		sl = sl->next;
+	}
+	while (sl2)
+	{
+		if (sl2 != best)
+			free(sl2->s);
+		sl2 = sl2->next;
+	}
+	return (best->s);
+}
+
+t_stack	*bruteforce(t_stack *s, int maxops, int i)
+{
+	t_snode	*sl;
+	t_snode	*sl2;
+	int		valid;
+	static int	rnd;
+
+	ft_printf("bf%d\n", ++rnd);
+	printlist(s->ops);
+	valid = 0;
+	sl = add_stack(NULL, s);
+	sl2 = sl;
+	if ((s->b == NULL && is_sorted(s->a)) || get_listsize(s->ops) >= maxops)
+		return (s);
+	while (i < 11)
+	{
+		if (check_op(s, i) && ++valid)
+		{
+			make_op(sl->s, i);
+			//sl->s->ops = add_to_end(i, sl->s->ops);
+			bruteforce(sl->s, maxops, 0);
+			sl = add_stack(sl, s);
+		}
+		i++;
+	}
+	return (minops2(sl2, sl2, valid));
+}
