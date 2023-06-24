@@ -1,0 +1,25 @@
+philo.c
+printf("p1 start %d:%d p%d start %d:%d\n", (int)(t.b + 1)->start.tv_sec, (int)(t.b + 1)->start.tv_usec, t.philos, (int)(t.b + t.philos -1)->start.tv_sec, (int)(t.b + t.philos -1)->start.tv_usec);
+
+logutils2
+//if (i + 1 < log->lines && (log->log + i)->timestamp
+		//	> (log->log + i + 1)->timestamp)
+		//	logswap((log->log + i), (log->log + i + 1));
+
+void	logswap(t_logmsg *l1, t_logmsg *l2)
+{
+	t_logmsg	t;
+
+	t.timestamp = l1->timestamp;
+	t.philo = l1->philo;
+	t.type = l1->type;
+	t.meal = l1->meal;
+	l1->timestamp = l2->timestamp;
+	l1->philo = l2->philo;
+	l1->type = l2->type;
+	l1->meal = l2->meal;
+	l2->timestamp = t.timestamp;
+	l2->philo = t.philo;
+	l2->type = t.type;
+	l2->meal = t.meal;
+}
