@@ -6,7 +6,7 @@
 /*   By: rleskine <rleskine@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 13:37:57 by rleskine          #+#    #+#             */
-/*   Updated: 2023/08/14 13:53:56 by rleskine         ###   ########.fr       */
+/*   Updated: 2023/08/14 15:10:25 by rleskine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,20 @@ void	scheduler(void *arg)
 	{
 		pthread_mutex_lock(&t->schd_lock);
 		gettimeofday(now, NULL);
-		n[0] = *t->schedule;
-		// cont
+		n[0] = t->schedule;
+		n[1] = t->schedule;
+		while (n[1] && ((n[1]->time.tv_usec < now.tv_sec)
+				|| (n[1]->time.tv_sec == now.tv_sec && n[1]->time.tv_usec
+					<= now.tv_usec)))
+				n[1] = n[1]->next;
+		t->schedule = n[1]->next;
+		n[1]->next = NULL;
+		n[1] = n[0];
+		while (n[0])
+		{
+			pthread_mutex_unlock(&n[0]->lock);
+			n[0] = n[0]->next;
+		}
+		
 	}
 }
