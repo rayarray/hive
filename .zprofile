@@ -1,1 +1,1 @@
-../.zprofile
+/Users/rleskine/.zprofile
