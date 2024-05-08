@@ -1,25 +1,22 @@
-# Multipurpose Makefile for C (modifiable for C++ use)
-NAME		=	executable
+NAME		=	array
 
-SRC			=	source1.c source2.c
-# Libraries to compile in subdirectories (e.g. libft)
-LIBS		=	
+SRC			=	main.cpp
 
 SRCDIR		=	src
 OBJDIR		=	obj
 INCDIR		=	include
-# Library flags to use in compiling (e.g. -lft)
 LIBFLG		=	
 
 OBJ			=	$(foreach o, $(SRC:.cpp=.o),$(OBJDIR)/$(o))
+DEP			=	$(foreach d, $(SRC:.cpp=.d),$(OBJDIR)/$(d))
 LIBINC		=	$(foreach l, $(LIBS),-I $(l) -L $(l) -l$(l:lib%=%))
 LIBARC		=	$(foreach l, $(LIBS),$(l)/$(l).a)
 INCLUDE		=	$(foreach i, $(INCDIR),-I $(i)) $(foreach l, $(LIBS),-I $(l))
 
-CFLAGS		=	-Wall -Wextra -Werror
+CFLAGS		=	-Wall -Wextra -Werror -std=c++17
 SFLAGS		=	-fsanitize=address -g
 
-CC 			=	gcc
+CC 			=	c++
 
 # == Determine OS and CPU core count =
 OS := $(shell uname)
@@ -42,9 +39,11 @@ setdebug:
 $(NAME): $(OBJ) $(LIBARC)
 	$(CC) $(CFLAGS) $(INCLUDE) $(LIBFLG) $(LIBINC) $(MLX42) -o $@ $(OBJ)
 
-$(OBJ): $(OBJDIR)/%.o: $(SRCDIR)/%.c
+-include $(DEP)
+
+$(OBJ): $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@if [ $(OBJDIR) != '.' ] && [ ! -d $(OBJDIR) ]; then mkdir $(OBJDIR); fi
-	$(CC) $(CFLAGS) $(INCLUDE) -c -o $@ $(SRCDIR)/$(notdir $(@:.o=.cpp))
+	$(CC) $(CFLAGS) $(INCLUDE) -MMD -MP -c -o $@ $(SRCDIR)/$(notdir $(@:.o=.cpp))
 
 $(LIBARC): %:
 	$(MAKE) -j$(NPROCS) -C $(basename $(notdir $@))
@@ -52,6 +51,7 @@ $(LIBARC): %:
 clean:
 	@$(foreach l, $(LIBS),$(MAKE) -C $(l) clean;)
 	@rm -f $(foreach o, $(OBJ),$(o))
+	@rm -f $(foreach d, $(DEP),$(d))
 	@if [ $(OBJDIR) != '.' ] && [ -d $(OBJDIR) ]; then rmdir $(OBJDIR); fi
 
 fclean: clean

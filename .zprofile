@@ -39,8 +39,20 @@ cdp() { if [ "$#" -gt 0 ]; then cd "$HOME/$FTPROJECT/$@"; else cd "$HOME/$FTPROJ
 cpp() { if [ "$#" -gt 0 ]; then cd "$HOME/cppmodules/cpp0$1"; else cd "$HOME/cppmodules"; fi; if [ "$#" -eq 2  ]; then cd "ex0$2"; fi }
 c++() { if [ "$#" -gt 0 ]; then cd "$HOME/c++modrepo/cpp0$@"; else cd "$HOME/c++modrepo"; fi }
 clex() { echo "Making fclean in ex folders"; for i in $(seq 0 9); do if [ -d "ex0$i" ]; then make -C ex0$i fclean; fi; done }
-mkex() { echo "Making $@ in ex folders"; for i in $(seq 0 9); do if [ -d "ex0$i" ]; then make -C ex0$i $@; fi; done }
-
+exmk() { echo "Making $@ in ex folders"; for i in $(seq 0 9); do if [ -d "ex0$i" ]; then make -C ex0$i $@; fi; done }
+mkex() { 
+	if [ "$#" -eq 0 ]; then 
+		echo "Copying Makefile and creating include/src folders";
+		cp ~/.Makefile ./Makefile
+	    mkdir src include
+	elif; then 
+		echo "Creating $@ directory";
+		mkdir $@;
+		cd $@;
+		newex;
+	fi;
+}
+testparnbr() { echo "$#" }
 
 # Tab names and colors
 
