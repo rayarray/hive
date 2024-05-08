@@ -21,8 +21,9 @@ alias lk="leaks --atExit -- "
 alias lks="leaks --atExit -- "
 alias lsl='ls -lah'
 alias ga='git add'
-alias gc='git commit'
+alias gc='git commit -m'
 alias gp='git push'
+alias mkcpp='cp ~/.Makefile ./Makefile && mkdir include && mkdir src'
 
 #inception aliases
 alias issh='ssh -l rleskine -p 3022 localhost'
