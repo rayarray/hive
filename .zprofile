@@ -46,10 +46,16 @@ mkex() {
 		cp ~/.Makefile ./Makefile
 	    mkdir src include
 	elif; then 
-		echo "Creating $@ directory";
-		mkdir $@;
-		cd $@;
-		newex;
+		echo "Creating ex0$@ directory";
+		mkdir ex0$@;
+		cd ex0$@;
+		mkex;
+	fi;
+}
+cpex() {
+	if [ "$#" -eq 2 ]; then
+		echo "Copying cpp0$1 ex0$2"
+		cp -a ~/cppmodules/cpp0$1/ex0$2 .
 	fi;
 }
 testparnbr() { echo "$#" }
